@@ -1,0 +1,36 @@
+
+  error code class
+
+    # error = Literal('789')
+    # regex = Match('\d{3}')
+    # regex = Token('\d')
+    # regex = Pos("NNP")+Token("-")+Pos("CD")
+    # print regex
+    # regex = Question(Pos("JJ")) + (Pos("NN") | Pos("NNP") | Pos("NNS")) | Pos("VBN")
+
+    # target = Token("0")+Question(Pos("DT")) + Group(Pos("NN"), "target")
+    # regex = Lemma("what") + Lemma("be") + target + Question(Pos("."))
+
+  what is class
+
+    1
+
+    # target = Question(Pos("DT")) + Question(Lemma("meaning") + Pos("IN")) + Group((Pos("NN") | Pos("NNP") | Pos("NNS")) | Pos("VBN"), "target")
+    # regex = Lemma("what") + Lemma("be") + target + Question(Pos("."))
+    #
+    # def interpret(self, match):
+    #     thing = match.target.tokens
+    #     target = IsError() + ErrorIdOf(thing)
+    #
+    #     return target, "errorNlg"
+
+    2
+
+    # regex = Lemma("what") + Lemma("be") + Question(Pos("DT")) + Question(Lemma("meaning") + Pos("IN")) + \
+    #         ErrorCode() + Question(Pos("."))
+    #
+    # def interpret(self, match):
+    #     target = IsError()
+    #     return target, "errorNlg"
+
+

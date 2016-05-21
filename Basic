@@ -1,0 +1,43 @@
+isinstance(s, str)
+
+is
+
+str = ""
+print str.replace("to be", "current", 3)
+
+---------------------------------------------------------
+\a	0x07	Bell or alert
+\b	0x08	Backspace
+\cx	 	Control-x
+\C-x	 	Control-x
+\e	0x1b	Escape
+\f	0x0c	Formfeed
+\M-\C-x	 	Meta-Control-x
+\n	0x0a	Newline
+\nnn	 	Octal notation, where n is in the range 0.7
+\r	0x0d	Carriage return
+\s	0x20	Space
+\t	0x09	Tab
+\v	0x0b	Vertical tab
+\x	 	Character x
+\xnn	 	Hexadecimal notation, where n is in the range 0.9, a.f, or A.F
+
+--------------------------------------
+from lxml import etree
+
+# create XML
+root = etree.Element('root')
+root.append(etree.Element('child'))
+# another child with text
+child = etree.Element('child')
+child.text = 'some text'
+root.append(child)
+
+# pretty string
+s = etree.tostring(root, pretty_print=False)
+print s
+
+----------------------
+
+my_string="hello python world , i'm a beginner "
+print my_string.split("world", 1)[1]
