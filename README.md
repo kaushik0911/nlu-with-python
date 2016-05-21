@@ -1,3 +1,3 @@
 # nova
-#CDAP #ORACLE #2016
-#repo
+# CDAP #ORACLE #2016
+repo
