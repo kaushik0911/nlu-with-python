@@ -100,7 +100,7 @@ if __name__ == "__main__":
             metadata = None
 
         if query is None:
-            print "Sorry Query not Recognized :( \n"
+            print "Sorry Question not Recognized :( \n"
             sys.exit(0)
 
         stringQuery = str(query)
