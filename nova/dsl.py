@@ -9,7 +9,7 @@ Domain specific language for nova quepy.
 
 from quepy.dsl import FixedType, FixedRelation, HasKeyword, FixedDataRelation
 # Setup the Keywords for this application
-HasKeyword.relation = "ora:errorId"
+HasKeyword.relation = "ora:error_id"
 # HasKeyword.language = "en"
 
 
@@ -22,7 +22,7 @@ class IsFile(FixedType):
 
 
 class ErrorIdOf(FixedDataRelation):
-    relation = "ora:errorId"
+    relation = "ora:error_id"
     # language = "en"
     # reverse = False
 
@@ -45,7 +45,7 @@ class HasErrorTip(FixedRelation):
 
 
 class HasErrorCause(FixedRelation):
-    relation = "ora:cause"
+    relation = "ora:caused_due_to"
     reverse = True
 
 

@@ -198,3 +198,19 @@ class WhyError(QuestionTemplate):
 #             meta = "fileNlg", "What"
 #
 #         return target, meta
+
+
+"<question_type>WHAT</question_type>" +
+"<error>" +
+ "<is_fixable_by_the_system>false</is_fixable_by_the_system>" +
+ "<error_id>ORA000001</error_id>" +
+ "<error_description>Table or view does not exists</error_description>" +
+ "<caused_due_to>Table owner name not specified when logged-in as a non-creator of the table, " +
+ "ORA-00942 on table import (imp or impdp), ORA-00942 on materialized view refresh" +
+ "</caused_due_to>" +
+ "<severity_level>minor</severity_level>" +
+ "<description>Table or view does not exists in severity level</description>" +
+ "<ran>quick</ran>" +
+ "<ran>quiet</ran>" +
+ "<ran>slow</ran>" +
+ "</error>";

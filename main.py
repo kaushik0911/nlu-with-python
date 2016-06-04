@@ -63,14 +63,13 @@ def print_cause(results, target, metadata=None):
 
     question_type_tag = etree.Element("question_type")
     question_type_tag.text = question_type
-    root.append(question_type_tag)
 
     for result in results["results"]["bindings"]:
-        child = etree.Element("cause")
+        child = etree.Element("caused_due_to")
         child.text = str(result[target]["value"])
         root.append(child)
 
-    print etree.tostring(root, pretty_print=False)
+    print etree.tostring(question_type_tag, pretty_print=False) +etree.tostring(root, pretty_print=False)
 
 
 def print_file_location(results, target, metadata=None):
@@ -98,8 +97,11 @@ def has_numbers(inputString):
 if __name__ == "__main__":
 
     # question = "What is ora-00942"
-    # question = "What is listener.ora"
+    # question = "What is the meaning of listener.ora"
     question = "How to fix ora-00942"
+    # question = "What is the reason for ora-00942"
+    # question = "what is the location of listener.ora"
+    # question = "how to find listener.ora"
     question = question.replace("_", " ")
     # str(sys.argv[1].replace("_", " "))
 
@@ -202,6 +204,4 @@ if __name__ == "__main__":
                 print "No answer found :("
                 sys.exit(0)
 
-        print
         print_handlers[query_type](results, target, metadata)
-        print
