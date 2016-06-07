@@ -9,15 +9,15 @@ from dsl import IsError, ErrorIdOf, HasErrorTip, HasErrorCause, IsFile, FileOf, 
 
 error_tokens = Token("ORA00942") | Token("ORA00943")
 file_tokens = Tokens("listener")
-extension_tokens = Token("ora") | Token("log")
+extension_tokens = Token("ora")
 
 
 class WhatIsFile(QuestionTemplate):
     """
     Regex for questions like
 
-    What is Listener.ora
-    What is the meaning of Listener.ora
+    What is Listener.ora? -- ok
+    What is the meaning of Listener.ora? -- ok
     """
 
     target = Group(file_tokens, "target_file_name") + Group(extension_tokens, "target_file_extension")
@@ -40,9 +40,9 @@ class WhereIsFile(QuestionTemplate):
     """
     Regex for questions like
 
-    Where is Listener.ora (?locate) -- ok
-    What is the (?file) location of Listener.ora
-    How to find Listener.ora -- ok
+    Where is Listener.ora (?locate)? -- ok
+    What is the (?file) location of Listener.ora ((?file)? -- ok
+    How to find Listener.ora? -- ok
     """
 
     target = Group(file_tokens, "target_file_name") + Group(extension_tokens, "target_file_extension")
@@ -51,9 +51,12 @@ class WhereIsFile(QuestionTemplate):
     #     Question(Lemma("find") + Question(Pos("DT"))) + Question(Lemma("file")) +\
     #     Question(Lemma("location") + Pos("IN")) + target + Question(Lemma("locate")) + Question(Pos("."))
 
-    # regex = Lemma("how to") + Lemma("find") + target
+    regex = (Lemmas("how to") + Lemma("find") + target) | \
+            (Lemma("where") + Lemma("be") + target + Question(Lemma("locate"))) | \
+            (Pos("WP") + Lemma("be") + Question(Pos("DT")) + Question(Lemma("file")) + Lemma("location") + Pos("IN") + target +
+             Question(Lemma("file")))
 
-    # regex = Lemma("where") + Lemma("be") + target + Lemma("locate")
+    # regex = Lemma("where") + Lemma("be") + target + Question(Lemma("locate"))
 
     # regex = Pos("WP") + Lemma("be") + Question(Pos("DT")) + Lemma("location") + Pos("IN") + target
 
@@ -63,6 +66,6 @@ class WhereIsFile(QuestionTemplate):
         extension = match.target_file_extension.tokens
 
         target = IsFile() + FileOf(name) + FileExtensionOf(extension)
-        meta = "fileLocationNlg", "Where", str(name+"."+extension)
+        meta = "fileLocationNlg", "WHERE", str(name+"."+extension)
 
         return FileLocation(target), meta

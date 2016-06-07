@@ -77,7 +77,7 @@ def print_file_location(results, target, metadata=None):
 
     question_type_tag = etree.Element("question_type")
     question_type_tag.text = question_type
-    root.append(question_type_tag)
+    # root.append(question_type_tag)
 
     for result in results["results"]["bindings"]:
         child = etree.Element("fileLocation")
@@ -88,7 +88,7 @@ def print_file_location(results, target, metadata=None):
     file_name_tag.text = file_name
     root.append(file_name_tag)
 
-    print etree.tostring(root, pretty_print=False)
+    print etree.tostring(question_type_tag, pretty_print=False) + etree.tostring(root, pretty_print=False)
 
 
 def has_numbers(inputString):
@@ -96,14 +96,18 @@ def has_numbers(inputString):
 
 if __name__ == "__main__":
 
-    # question = "What is ora-00942"
+    question = "What is ora-00942"
+    # question = "What is the meaning of ora-00942"
     # question = "What is the meaning of listener.ora"
-    question = "How to fix ora-00942"
-    # question = "What is the reason for ora-00942"
-    # question = "what is the location of listener.ora"
+    # question = "How to fix ora-00942"
+    # question = "Why ora-00942"
+    # question = "what is the reason for ora-00942"
+    # question = "what is the location of listener.ora file"
     # question = "how to find listener.ora"
+    # question = "Where is listener.ora locate"
+    # question = "What is the meaning of listener.ora"
     question = question.replace("_", " ")
-    # str(sys.argv[1].replace("_", " "))
+    # question = str(sys.argv[1].replace("_", " "))
 
     # questions = [
     #     "Why ora-00942"
@@ -145,15 +149,15 @@ if __name__ == "__main__":
             question = question.replace(".", " ")
             # print question
 
-        print question
+        # print question
 
         target, query, metadata = nova.get_query(question)
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
             question_type = metadata[1]
-            # if metadata[2]:
-            #     file_name = metadata[2]
+            if len(metadata) == 3 and metadata[2]:
+                file_name = metadata[2]
             # print query_type
             # print metadata
         else:
@@ -189,7 +193,7 @@ if __name__ == "__main__":
         if query_type == "fileLocationNlg":
             root_type = "fileLocation"
 
-        print query
+        # print query
 
         if target.startswith("?"):
             target = target[1:]
@@ -198,7 +202,7 @@ if __name__ == "__main__":
             sparql.setReturnFormat(JSON)
             results = sparql.query().convert()
 
-            print results
+            # print results
 
             if not results["results"]["bindings"]:
                 print "No answer found :("
