@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-Basic queries for nova quepy.
+Files queries for nova quepy.
 """
 from quepy.parsing import Lemma, Pos, QuestionTemplate, Particle, Token, Match, Lemmas, Tokens
 from refo import Group, Question, Plus, Literal, Predicate, patterns
@@ -47,18 +47,10 @@ class WhereIsFile(QuestionTemplate):
 
     target = Group(file_tokens, "target_file_name") + Group(extension_tokens, "target_file_extension")
 
-    # regex = (Lemma("how") | Pos("WRB") | Lemma("what")) + Question(Pos("IN") | Lemma("be")) + \
-    #     Question(Lemma("find") + Question(Pos("DT"))) + Question(Lemma("file")) +\
-    #     Question(Lemma("location") + Pos("IN")) + target + Question(Lemma("locate")) + Question(Pos("."))
-
     regex = (Lemmas("how to") + Lemma("find") + target) | \
             (Lemma("where") + Lemma("be") + target + Question(Lemma("locate"))) | \
-            (Pos("WP") + Lemma("be") + Question(Pos("DT")) + Question(Lemma("file")) + Lemma("location") + Pos("IN") + target +
-             Question(Lemma("file")))
-
-    # regex = Lemma("where") + Lemma("be") + target + Question(Lemma("locate"))
-
-    # regex = Pos("WP") + Lemma("be") + Question(Pos("DT")) + Lemma("location") + Pos("IN") + target
+            (Pos("WP") + Lemma("be") + Question(Pos("DT")) + Question(Lemma("file")) + Lemma("location") + Pos("IN") +
+             target + Question(Lemma("file")))
 
     def interpret(self, match):
 

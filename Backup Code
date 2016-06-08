@@ -214,3 +214,12 @@ class WhyError(QuestionTemplate):
  "<ran>quiet</ran>" +
  "<ran>slow</ran>" +
  "</error>";
+
+     # regex =
+
+    # target = Question(Pos("DT")) + Question(Lemma("meaning") + Pos("IN")) +\
+    #     Group(Token("ORA00942"), "target")
+    # wh_type = Group()
+    # # regex = Pos("WRB") + Question(Pos("DT")) + Lemma("fix") + target
+
+            # str(match.wh.tokens)
