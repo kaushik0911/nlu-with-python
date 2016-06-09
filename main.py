@@ -136,6 +136,8 @@ if __name__ == "__main__":
     # question = question.replace("_", " ")
 
     question = str(sys.argv[1].replace("_", " "))
+    question = question.lower()
+    print question
 
     # print functions
     print_handlers = {
