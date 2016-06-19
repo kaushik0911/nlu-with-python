@@ -28,7 +28,7 @@ class ErrorIdOf(FixedDataRelation):
 
 
 class FileOf(FixedDataRelation):
-    relation = "ora:oraFileName"
+    relation = "ora:file_name"
     # language = "en"
     # reverse = False
 
@@ -50,5 +50,5 @@ class HasErrorCause(FixedRelation):
 
 
 class FileLocation(FixedRelation):
-    relation = "ora:fileLocation"
+    relation = "ora:located_in"
     reverse = True

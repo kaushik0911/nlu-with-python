@@ -104,7 +104,7 @@ def print_file_location(results, target, metadata=None):
     # root.append(question_type_tag)
 
     for result in results["results"]["bindings"]:
-        child = etree.Element("fileLocation")
+        child = etree.Element("located_in")
         child.text = str(result[target]["value"])
         root.append(child)
 
@@ -120,24 +120,49 @@ def has_numbers(inputString):
 
 if __name__ == "__main__":
 
-    # Questions that can ask from the system
+    """
+    Questions that can ask from the system
 
-    # question = "What is ora-00942"
-    # question = "What is the meaning of ora-00942"
+    What is ora-00942? -- ok
+    What is the meaning of ora-00942? -- ok
+    what is meant by ora-00942? -- ok ! check question pattern
+    (?What is) definition of ora-00942? -- ok
+
+    How to fix ora-00942? -- ok
+    (?proper) way of fixing ora-00942? -- ok
+    (?proper) steps to fixing ora-00942 -- ok
+
+    Why ora-00942? -- ok
+    (?What is the) reason for ora-00942? -- ok
+
+    What is the meaning of listener.ora -- ok
+
+    Where is listener.ora (?file) locate -- ok
+    How to find listener.ora (?file) -- ok
+    """
+
+    # question = "What is ORA12541"
+    # question = "What is the meaning of ORA12541"
+    # question = "What is meant by ora-00942"
+    # question = "definition of ora-00942"
     # question = "What is the meaning of listener.ora"
     # question = "How to fix ora-00942"
+    # question = "steps to fix ora-00942"
+    # question = "proper way of fix ora-00942?"
+    # question = "proper steps to fix ora-00942"
     # question = "Why ora-00942"
     # question = "what is the reason for ora-00942"
     # question = "what is the location of listener.ora file"
     # question = "how to find listener.ora"
     # question = "Where is listener.ora locate"
     # question = "What is the meaning of listener.ora"
+    # question = "What is listener.ora"
 
     # question = question.replace("_", " ")
 
     question = str(sys.argv[1].replace("_", " "))
     question = question.lower()
-    print question
+    # print question
 
     # print functions
     print_handlers = {
@@ -160,7 +185,7 @@ if __name__ == "__main__":
                 question = question.replace("ora", "ORA")
                 error_no = "ORA-"+question.split('ORA')[1][0:5]
 
-        # print question
+                # print question
 
             else:
                 print "type error code correctly"
@@ -168,7 +193,7 @@ if __name__ == "__main__":
 
         # if question ask about a db file
         # following will check if file name typed correctly
-        if regex_for_oracle_file.search(question):
+        elif regex_for_oracle_file.search(question):
             question = question.replace(".", " ")
 
         # print question
