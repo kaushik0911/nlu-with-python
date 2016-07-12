@@ -9,6 +9,7 @@ import re
 import sys
 from lxml import etree
 from SPARQLWrapper import SPARQLWrapper, JSON
+from spelling import correct
 
 # regex for validate inputs and outputs
 
@@ -24,7 +25,7 @@ regex_for_error_code = re.compile(r'\b ora\W?\d{5}\b', re.I | re.M)
 regex_for_oracle_file = re.compile(r'\b .*\W?(ora|log)\b', re.I | re.M)
 
 # onto url
-sparql = SPARQLWrapper("http://127.0.0.1:3030/ds/query")
+sparql = SPARQLWrapper("http://localhost:3030/ds/query")
 nova = quepy.install("nova")
 
 root_type = ""
@@ -40,7 +41,7 @@ def print_define_for_error_nlg(results, target, metadata=None):
     xml contains question_type tag to recognise the WH question type for NLG
     root tag identify the information inside the xml
     """
-
+    count = 0
     root = etree.Element(root_type)
 
     question_type_tag = etree.Element("question_type")
@@ -108,7 +109,7 @@ def print_file_location(results, target, metadata=None):
         child.text = str(result[target]["value"])
         root.append(child)
 
-    file_name_tag = etree.Element("fileName")
+    file_name_tag = etree.Element("file_name")
     file_name_tag.text = file_name
     root.append(file_name_tag)
 
@@ -142,7 +143,8 @@ if __name__ == "__main__":
     """
 
     # question = "What is ORA12541"
-    # question = "What is the meaning of ORA12541"
+    question = "What is the mening of ORA12541"
+
     # question = "What is meant by ora-00942"
     # question = "definition of ora-00942"
     # question = "What is the meaning of listener.ora"
@@ -160,9 +162,21 @@ if __name__ == "__main__":
 
     # question = question.replace("_", " ")
 
-    question = str(sys.argv[1].replace("_", " "))
+    # question = str(sys.argv[1].replace("_", " "))
     question = question.lower()
-    # print question
+
+
+    # question = "What is the menig of ORA12542"
+
+    word_list = question.split()
+    question = ""
+
+    print word_list
+
+    for word in word_list:
+        question += correct(word) + " "
+
+    print question
 
     # print functions
     print_handlers = {
@@ -184,8 +198,6 @@ if __name__ == "__main__":
                 question = question.replace("-", "")
                 question = question.replace("ora", "ORA")
                 error_no = "ORA-"+question.split('ORA')[1][0:5]
-
-                # print question
 
             else:
                 print "type error code correctly"
@@ -238,21 +250,33 @@ if __name__ == "__main__":
             root_type = "error"
 
         if query_type == "fileLocationNlg":
-            root_type = "fileLocation"
+            root_type = "file"
 
         # print query
 
-        if target.startswith("?"):
-            target = target[1:]
-        if query:
-            sparql.setQuery(query)
-            sparql.setReturnFormat(JSON)
-            results = sparql.query().convert()
+        print query.replace("\n", " ")
+        print question_type
+        print root_type
+        print query_type
 
-            # print results
+        if error_no:
+            print error_no
 
-            if not results["results"]["bindings"]:
-                print "No answer found :("
-                sys.exit(0)
+        if file_name:
+            print file_name
 
-        print_handlers[query_type](results, target, metadata)
+        # if target.startswith("?"):
+        #     target = target[1:]
+        # if query:
+        #     sparql.setQuery(query)
+        #     sparql.setReturnFormat(JSON)
+        #     results = sparql.query().convert()
+        #
+        #     print results
+        #
+        #     if not results["results"]["bindings"]:
+        #         print "No answer found :("
+        #         sys.exit(0)
+        #
+        # print_handlers[query_type](results, target, metadata)
+
