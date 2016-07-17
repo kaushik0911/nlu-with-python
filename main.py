@@ -7,19 +7,10 @@ Main script for nova quepy.
 import quepy
 import re
 import sys
-from lxml import etree
-from SPARQLWrapper import SPARQLWrapper, JSON
+from SPARQLWrapper import SPARQLWrapper
 from spelling import correct
-
+from xml_converter import print_cause, print_define_for_error_nlg,print_file_location
 # regex for validate inputs and outputs
-
-regex_for_url = re.compile(
-    r'^(?:http|ftp)s?://'  # http:// or https://
-    r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain
-    r'localhost|'  # localhost
-    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ip
-    r'(?::\d+)?'  # port
-    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 regex_for_error_code = re.compile(r'\b ora\W?\d{5}\b', re.I | re.M)
 regex_for_oracle_file = re.compile(r'\b .*\W?(ora|log)\b', re.I | re.M)
@@ -32,92 +23,12 @@ root_type = ""
 query_type = ""
 file_name = ""
 error_no = ""
+target_keyword = ""
+question_type = ""
 
 
-def print_define_for_error_nlg(results, target, metadata=None):
-    """
-    This function create xml for error definition or oracle file definition.
-
-    xml contains question_type tag to recognise the WH question type for NLG
-    root tag identify the information inside the xml
-    """
-    count = 0
-    root = etree.Element(root_type)
-
-    question_type_tag = etree.Element("question_type")
-    question_type_tag.text = question_type
-
-    # loop through the JSON and gather all information out from the query
-    for result in results["results"]["bindings"]:
-        if not regex_for_url.search(result["value"]["value"]):
-
-            # naming the tag and put values into it
-            tag_name = str(result["property"]["value"]).split("#", 1)[1]
-            tag_text = str(result["value"]["value"])
-
-            if tag_name == "oraFileName":
-                file_name = tag_text
-                continue
-
-            if tag_name == "fileExtension":
-                tag_name = "fileName"
-                tag_text = str(file_name) + "." + tag_text
-
-            # append data
-            child = etree.Element(tag_name)
-            child.text = tag_text
-            root.append(child)
-
-    # print xml
-    print etree.tostring(question_type_tag, pretty_print=False) + etree.tostring(root, pretty_print=False)
-
-
-def print_cause(results, target, metadata=None):
-    """
-    This function create xml for error cause.
-    """
-
-    root = etree.Element(root_type)
-
-    question_type_tag = etree.Element("question_type")
-    question_type_tag.text = question_type
-
-    for result in results["results"]["bindings"]:
-        child = etree.Element("caused_due_to")
-        child.text = str(result[target]["value"])
-        root.append(child)
-
-    error_name_tag = etree.Element("error_id")
-    error_name_tag.text = error_no
-    root.append(error_name_tag)
-
-    print etree.tostring(question_type_tag, pretty_print=False) + etree.tostring(root, pretty_print=False)
-
-
-def print_file_location(results, target, metadata=None):
-    """
-    This function create xml for oracle db file location.
-    """
-    root = etree.Element(root_type)
-
-    question_type_tag = etree.Element("question_type")
-    question_type_tag.text = question_type
-    # root.append(question_type_tag)
-
-    for result in results["results"]["bindings"]:
-        child = etree.Element("located_in")
-        child.text = str(result[target]["value"])
-        root.append(child)
-
-    file_name_tag = etree.Element("file_name")
-    file_name_tag.text = file_name
-    root.append(file_name_tag)
-
-    print etree.tostring(question_type_tag, pretty_print=False) + etree.tostring(root, pretty_print=False)
-
-
-def has_numbers(inputString):
-    return any(char.isdigit() for char in inputString)
+def has_numbers(input_String):
+    return any(char.isdigit() for char in input_String)
 
 if __name__ == "__main__":
 
@@ -143,7 +54,7 @@ if __name__ == "__main__":
     """
 
     # question = "What is ORA12541"
-    question = "What is the mening of ORA12541"
+    # question = "What is the meaning of ORA12541"
 
     # question = "What is meant by ora-00942"
     # question = "definition of ora-00942"
@@ -155,7 +66,7 @@ if __name__ == "__main__":
     # question = "Why ora-00942"
     # question = "what is the reason for ora-00942"
     # question = "what is the location of listener.ora file"
-    # question = "how to find listener.ora"
+    question = "how to find listener.ora"
     # question = "Where is listener.ora locate"
     # question = "What is the meaning of listener.ora"
     # question = "What is listener.ora"
@@ -165,18 +76,13 @@ if __name__ == "__main__":
     # question = str(sys.argv[1].replace("_", " "))
     question = question.lower()
 
-
-    # question = "What is the menig of ORA12542"
-
     word_list = question.split()
     question = ""
-
-    print word_list
 
     for word in word_list:
         question += correct(word) + " "
 
-    print question
+    # print question
 
     # print functions
     print_handlers = {
@@ -197,10 +103,11 @@ if __name__ == "__main__":
             if regex_for_error_code.search(question):
                 question = question.replace("-", "")
                 question = question.replace("ora", "ORA")
-                error_no = "ORA-"+question.split('ORA')[1][0:5]
+                target_keyword = "ORA-"+question.split('ORA')[1][0:5]
+                # target_keyword = error_no
 
             else:
-                print "type error code correctly"
+                print "Please type error code correctly. eg :- ora00942"
                 sys.exit(0)
 
         # if question ask about a db file
@@ -218,7 +125,7 @@ if __name__ == "__main__":
             query_type = metadata[0]
             question_type = metadata[1]
             if len(metadata) == 3 and metadata[2]:
-                file_name = metadata[2]
+                target_keyword = metadata[2]
 
         else:
             query_type = metadata
@@ -227,7 +134,7 @@ if __name__ == "__main__":
         # if query not build
         # means asked question not appropriately typed or not valid for the domainS
         if query is None:
-            print "Sorry Question not Recognized :( \n"
+            print "Sorry Question not Recognized. May be out of domain."
             sys.exit(0)
 
         stringQuery = str(query)
@@ -259,11 +166,10 @@ if __name__ == "__main__":
         print root_type
         print query_type
 
-        if error_no:
-            print error_no
+        if target_keyword:
+            print target_keyword
 
-        if file_name:
-            print file_name
+        print question
 
         # if target.startswith("?"):
         #     target = target[1:]
@@ -278,5 +184,4 @@ if __name__ == "__main__":
         #         print "No answer found :("
         #         sys.exit(0)
         #
-        # print_handlers[query_type](results, target, metadata)
-
+        # print_handlers[query_type](results, target, root_type, question_type, target_keyword)
