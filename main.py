@@ -12,7 +12,7 @@ from spelling import correct
 from xml_converter import print_cause, print_define_for_error_nlg,print_file_location
 # regex for validate inputs and outputs
 
-regex_for_error_code = re.compile(r'\b ora\W?\d{5}\b', re.I | re.M)
+regex_for_error_code = re.compile(r'\b ora\s?\W?\d{5}\b', re.I | re.M)
 regex_for_oracle_file = re.compile(r'\b .*\W?(ora|log)\b', re.I | re.M)
 
 # onto url
@@ -66,14 +66,14 @@ if __name__ == "__main__":
     # question = "Why ora-00942"
     # question = "what is the reason for ora-00942"
     # question = "what is the location of listener.ora file"
-    question = "how to find listener.ora"
+    # question = "how to find listener.ora"
     # question = "Where is listener.ora locate"
     # question = "What is the meaning of listener.ora"
     # question = "What is listener.ora"
 
     # question = question.replace("_", " ")
 
-    # question = str(sys.argv[1].replace("_", " "))
+    question = str(sys.argv[1].replace("_", " "))
     question = question.lower()
 
     word_list = question.split()
@@ -92,6 +92,8 @@ if __name__ == "__main__":
         "fileNlg": print_define_for_error_nlg,
         "fileLocationNlg": print_file_location
     }
+
+
 
     if question:
 
