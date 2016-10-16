@@ -93,8 +93,6 @@ if __name__ == "__main__":
         "fileLocationNlg": print_file_location
     }
 
-
-
     if question:
 
         # check whether question contains error number
