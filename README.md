@@ -1,5 +1,4 @@
-# nova
-# CDAP #ORACLE #2016
+# #CDAP #ORACLE #2016
 
 ## Natural Language Understanding ##
 
