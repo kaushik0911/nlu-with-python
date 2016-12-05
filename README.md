@@ -18,6 +18,9 @@ Wht is the meanig of ora-00942?
  > **After correction**
 What is the meaning of ora-00942?
 
+after correction Question go through regular expression. If the
+question matches with a regular expression, it output the query for access ontology.
+
 **query out**
 
 	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
