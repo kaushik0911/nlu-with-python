@@ -12,7 +12,7 @@ from the ontology organized as a xml string.
 repo
 ----
 
-> **Question**
+> **User Input Question**
 Wht is the meanig of ora-00942?
  
  > **After correction**
@@ -28,3 +28,14 @@ What is the meaning of ora-00942?
 		?x0 ?property ?value.
 	}
 
+## Research Objectives ##
+
+Understand and Process the user input questions from the interface and through natural
+language understanding, extract the meaning what user asked and generate SPARQL
+for a knowledgebase.
+
+The system component will get user question as text input and parse that to the
+knowledge base to retrieve the correct solution. Recognizing entities in formless text
+and understand user question are done by using natural language understanding
+(NLU). User input should be in English. Then Component output the SPARQL under
+domain specific, for ontology, forming web data known as linked data.
