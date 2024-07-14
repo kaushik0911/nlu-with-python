@@ -1,5 +1,3 @@
-# #CDAP #ORACLE #2016
-
 ## Natural Language Understanding ##
 
 The Question and Answering component get user question as text input. User input is
